@@ -6,3 +6,8 @@ continents <- readr::read_csv("countries_continent.csv")
 
 dataset<- left_join(ramen_ratings, continents, by= "country")
 write.csv(dataset, "ramen_dataset.csv", row.names=FALSE)
+
+
+
+ramen_data <- readr::read_csv("ramen_dataset.csv")
+display_dataset <- ramen_ratings %>% filter(continent == "Europe")
