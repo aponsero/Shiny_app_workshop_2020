@@ -2,7 +2,7 @@ library(shiny)
 library(tidyverse)
 
 # load ramen Ratings dataset
-ramen_ratings <- readr::read_csv("https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2019/2019-06-04/ramen_ratings.csv")
+ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 
 # get list of countries in dataset
 country_list<- ramen_ratings %>% select(country) %>% unique()
@@ -44,11 +44,19 @@ ui <- navbarPage(title = "Ramen ratings",
                           HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
                           HTML('<br/>'),
                           sidebarLayout(fluid=TRUE,
-                                        sidebarPanel(
-                                          
-                                        ),
+                                          sidebarPanel(
+                                            selectInput("style2", "Select the ramen style:",
+                                                        c("Pack" = "Pack",
+                                                          "Bowl" = "Bowl",
+                                                          "Cup" = "Cup"), 
+                                                        selected = "Pack",
+                                                        multiple= FALSE),
+                                            sliderInput("ratings", "Ratings :",
+                                                        min = 0, max = 5, value = c(3,5), step=1
+                                            ),
+                                          ),
                                         mainPanel(
-                                          
+                                          plotOutput("continent"),
                                         ) # end main panel
                           ) # sidebarlayout panel
                  
@@ -73,6 +81,21 @@ server <- function(input, output) {
     ramen_ratings %>% filter(style == input$style & country == input$country) %>% 
       arrange(desc(stars, review_number)) %>% slice(1:10)
   })
+  
+  # ----------------------------------
+  # tab panel 2 - Ratings per country
+  output$continent <- renderPlot({  
+            display_dataset <- ramen_ratings %>% 
+              filter(style == input$style2 & stars >= input$ratings[1] & stars <= input$ratings[2])
+          
+            display_dataset %>% ggplot(aes(fill=country, x=continent)) + 
+                                geom_bar(stat="count")+
+                                ggtitle("Ramens by continents") +
+                                ylab("Number of Ramens")+
+                                xlab("")+
+                                theme_minimal(base_size = 13)
+  })
+  
   
 }
 
