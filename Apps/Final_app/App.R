@@ -15,7 +15,7 @@ ui <- navbarPage(title = "Ramen ratings",
                  # ----------------------------------
                  # tab panel 1 - Top ten best ramens
                  tabPanel(title = "Top ramen",
-                          h3("Best Ramens in the world", align = "center"),
+                          h1("Best Ramens in the world", align = "center"),
                           HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
                           HTML('<br/>'),
                           sidebarLayout(fluid=TRUE,
@@ -40,7 +40,7 @@ ui <- navbarPage(title = "Ramen ratings",
                  # ----------------------------------
                  # tab panel 2 - Top ten best ramens
                  tabPanel(title = "Country",
-                          h3("Best Ramens in the world", align = "center"),
+                          h1("Best Ramens in the world", align = "center"),
                           HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
                           HTML('<br/>'),
                           sidebarLayout(fluid=TRUE,
