@@ -40,18 +40,18 @@ Additionally, Shiny allows to easily add to the app the main elements you can fi
 
 | Shiny function        | desc           | HTML  |
 | ------------- |:-------------:| -----:|
-| p()      | text | <p> |
-| h1()...h6()     | header      |   <h1>...<h6> |
-| a() | Link      |    <a> |
-| br() | break      |    <br> |
-| div() | Link      |    <div> |
-| span() | in-line division of text      |    <span> |
-| img() | image      |    <img> |
-| strong() | bold text      |    <strong> |
-| em() | italicized text      |    <em> |
-| img() | image      |    <img> |
-| code() | block of code      |    <code> |
-| ------------- |:-------------:| -----:|
+| p()      | text | ``` <p> ``` |
+| h1()...h6()     | header      |  ``` <h1>...<h6> ``` |
+| a() | Link      |   ``` <a> ```|
+| br() | break      |   ``` <br> ```|
+| div() | Link      |   ``` <div> ``` |
+| span() | in-line division of text      |   ``` <span> ```|
+| img() | image      |   ``` <img> ```|
+| strong() | bold text      |   ``` <strong> ```|
+| em() | italicized text      |  ```  <em> ```|
+| img() | image      |   ``` <img> ```|
+| code() | block of code      |   ``` <code> ```|
+
  	
 Let's add to our app a title and some descriptive text:
 
