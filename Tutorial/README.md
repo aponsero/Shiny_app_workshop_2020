@@ -385,3 +385,156 @@ If you now run your app, you should see a reactive title, changing each time the
 
 ### Adding a tables, plots and dealing with reactive elements.
 
+```R
+server <- function(input, output) {
+  
+  # Title main area
+  # ----------------------------------
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
+  
+  # ----------------------------------
+  # Plot outputs
+  output$barplot <- renderPlot({ 
+    display_dataset <- ramen_ratings %>% filter(style %in% input$style & country == input$country)
+
+    display_dataset %>%  ggplot(aes(x=stars, fill=style)) +
+      geom_histogram(color="black",binwidth = 1)+
+      scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5), limits = c(-1,6))+
+      ggtitle("Ramens Ratings") +
+      ylab("Number of Ramens")+
+      xlab("Average Ratings")+
+      theme_minimal(base_size = 13)
+  })
+  
+  output$boxplot <- renderPlot({  
+    display_dataset <- ramen_ratings %>% filter(style %in% input$style & country == input$country)
+
+    display_dataset %>% ggplot(aes(x=style, y=stars, color=style)) +
+      geom_boxplot() +
+      ggtitle("Ramens Ratings") +
+      ylab("Average Ratings") +
+      xlab("Style of Ramen") +
+      theme_minimal(base_size = 13)
+  })
+  
+}
+```
+
+```R
+        mainPanel(
+          h3(textOutput("toptitle"), align = "left"),
+          plotOutput("barplot"),
+          plotOutput("boxplot"),
+        ), # end main panel
+```
+
+```R
+server <- function(input, output) {
+  
+  # Title main area
+  # ----------------------------------
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
+  
+  # ----------------------------------
+  # Reactive elements
+  display_dataset <- reactive({
+    ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  })
+  
+  # ----------------------------------
+  # Plot outputs
+  output$barplot <- renderPlot({  
+    display_dataset() %>%  ggplot(aes(x=stars, fill=style)) +
+      geom_histogram(color="black",binwidth = 1)+
+      scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5), limits = c(-1,6))+
+      ggtitle("Ramens Ratings") +
+      ylab("Number of Ramens")+
+      xlab("Average Ratings")+
+      theme_minimal(base_size = 13)
+  })
+  
+  output$boxplot <- renderPlot({  
+    display_dataset() %>% ggplot(aes(x=style, y=stars, color=style)) +
+      geom_boxplot() +
+      ggtitle("Ramens Ratings") +
+      ylab("Average Ratings") +
+      xlab("Style of Ramen") +
+      theme_minimal(base_size = 13)
+  })
+  
+}
+```
+
+
+```R
+server <- function(input, output) {
+  
+  # Title main area
+  # ----------------------------------
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
+  
+  # ----------------------------------
+  # Reactive elements
+  display_dataset <- reactive({
+    ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  })
+  
+  # ----------------------------------
+  # Table output
+  output$top3 <- renderTable({
+    display_dataset() %>% arrange(desc(stars, review_number)) %>% slice(1:3) %>% select(-continent, -review_number)
+  })
+  
+  # ----------------------------------
+  # Plot outputs
+  output$barplot <- renderPlot({  
+    display_dataset() %>%  ggplot(aes(x=stars, fill=style)) +
+      geom_histogram(color="black",binwidth = 1)+
+      scale_x_continuous(breaks = c(0, 1, 2, 3, 4, 5), limits = c(-1,6))+
+      ggtitle("Ramens Ratings") +
+      ylab("Number of Ramens")+
+      xlab("Average Ratings")+
+      theme_minimal(base_size = 13)
+  })
+  
+  output$boxplot <- renderPlot({  
+    display_dataset() %>% ggplot(aes(x=style, y=stars, color=style)) +
+      geom_boxplot() +
+      ggtitle("Ramens Ratings") +
+      ylab("Average Ratings") +
+      xlab("Style of Ramen") +
+      theme_minimal(base_size = 13)
+  })
+  
+}
+```
+
+```R
+        mainPanel(
+          h3(textOutput("toptitle"), align = "left"),
+          tableOutput("top3"),
+          plotOutput("barplot"),
+          plotOutput("boxplot"),
+        ), # end main panel
+```
+
+
+### Conditional panels
+
+```R
+        mainPanel(
+          h3(textOutput("toptitle"), align = "left"),
+          tableOutput("top3"),
+          conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
+          conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
+        ), # end main panel
+```
+
+
+## Deploying your app on Shiny.io
