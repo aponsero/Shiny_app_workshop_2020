@@ -11,24 +11,27 @@ country_list<- ramen_ratings %>% select(country) %>% unique()
 ui <- fluidPage(fluid = TRUE, 
   # ----------------------------------
   h1("Best Ramens in the world", align = "center"),
+  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
   HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
   HTML('<br/>'),
   # ----------------------------------
   sidebarLayout(fluid=TRUE,
     sidebarPanel(
-        selectInput("style", "Select the ramen style:",
+        selectInput("style", label="Select the ramen style:",
                       c("Pack" = "Pack",
                         "Bowl" = "Bowl",
                         "Cup" = "Cup"), 
                       selected = "Cup",
                       multiple= TRUE),
                       
-        selectInput("country", "Select the country of fabrication:",
+        selectInput("country", label="Select the country of fabrication:",
                     country_list, 
                     selected = "Japan",
                     multiple= FALSE),
     
-        radioButtons("pType", "Choose View:",
+        radioButtons("pType", label="Choose View:",
                      list("Barchart", "Boxplot"))
         
         ),

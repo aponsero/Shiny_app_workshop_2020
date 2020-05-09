@@ -28,74 +28,6 @@ First, we'll take a look at the UI function. This function contains all that you
 
 In the code above, you see that we are using the function "fluidPage()" to create a blank web page. Inside this page we'll place all elements we want to display.
 
-NEED TO ADD A SMALL EXPLANATION ON ADDING STUFF IN THE FLUIDPAGE
-
- 
-### Using Shiny Layouts to organize your App
-
-More complex App layouts can also be usefull to quickly organize your page and the navigation. A navigation bar and several tabs can be created using the NavBarPage layout.
-
-This Layout is composed of a NavBarPage that contain the global app. you can add to this page a main title. To create tabs, use the TabPanel() function.
-
-
-```R
-ui <- navbarPage(title = "Ramen ratings",
-                 fluid = TRUE, 
-                   
-                   # ----------------------------------
-                   # tab panel 1 - Top ten best ramens
-                   tabPanel(title = "Top ramen",
-                            
-                   ), # end tabPanel panel
-                   # ----------------------------------
-                   # tab panel 2 - Top ten best ramens
-                   tabPanel(title = "Country",
-                            
-                            
-                   ) # end tabPanel panel
-                   # ----------------------------------
-) # end NavPage panel
-```
-Run the app, this code should have create a page with a navigation bar and two (empty) tabs.
-
-
-Another popular layout is the sidebar layout. It allows to separate your screen into a sidebar and a main panel. Here we'll create a sidebar layout on the two tabs created.
-
-```R
-ui <- navbarPage(title = "Ramen ratings",
-                 fluid = TRUE, 
-                   
-                   # ----------------------------------
-                   # tab panel 1 - Top ten best ramens
-                   tabPanel(title = "Top ramen",
-
-	                   	sidebarLayout(fluid=TRUE,
-	                		sidebarPanel(
-	                  			p("side panel"),
-	                		),
-	                		mainPanel(
-	                  			p("main panel"),
-	                		) # end main panel
-	  					), # end sidebar Layout
-                            
-                   ), # end tabPanel panel
-                   # ----------------------------------
-                   # tab panel 2 - Top ten best ramens
-                   tabPanel(title = "Country",
-                        sidebarLayout(fluid=TRUE,
-	                		sidebarPanel(
-	                  			p("side panel"),
-	                		),
-	                		mainPanel(
-	                  			p("main panel"),
-	                		) # end main panel
-  					), # end sidebar Layout    
-                            
-                   ) # end tabPanel panel
-                   # ----------------------------------
-) # end NavPage panel
-```
-
 ### Adding HTML elements to the UI
 
 Now that we have a global layout, let's add HTML elements such as a title, a description and a picture. In your app, you can add directly HTML code using the function: 
@@ -124,22 +56,15 @@ Additionally, Shiny allows to easily add to the app the main elements you can fi
 Let's add to our app a title and some descriptive text in the first tab:
 
 ```R
-ui <- fluidPage(
-    # ----------------------------------
-           # tab panel 1 - Top ten best ramens
-           tabPanel(title = "Top ramen",
+ui <- fluidPage(fluid = TRUE, 
+                # ----------------------------------
+                h1("Best Ramens in the world", align = "center"),
+                p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!")
+                # ----------------------------------
 
-               	sidebarLayout(fluid=TRUE,
-            		sidebarPanel(
-              			p("side panel"),
-            		),
-            		mainPanel(
-              			p("main panel"),
-            		) # end main panel
-					), # end sidebar Layout
-                    
-           ), # end tabPanel panel
-)
+) # end fluidpage panel
 ```
 
 Note that the elements in the fluidPage should be listed using commas. Rstudio will complain if you forget them!
@@ -147,17 +72,21 @@ Note that the elements in the fluidPage should be listed using commas. Rstudio w
 When you run the app you should now see on the page the title and text we added.
 
 Next, we want to add a picture. Download the picture from the github repo : LINK. Create a folder www in the same directory as your app. Place the picture in that folder, so the app knows where to look for the picture.
+Here is the code to add a picture and center it to the page.
 
-Next, we add a picture and center it to the page.
 ```R
-ui <- fluidPage(
-  h1("Best Ramens in the world", align = "center"),
-  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
-  select your favorite ramen style and the country of fabrication. The table below display the top ten 
-    ramens for this selection!"),
-  HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
-  HTML('<br/>'),
-)
+ui <- fluidPage(fluid = TRUE, 
+                # ----------------------------------
+                h1("Best Ramens in the world", align = "center"),
+                p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!")
+                HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+                br()
+                # ----------------------------------
+
+) # end fluidpage panel
+
 ```
 
 Run the app. Note that the app is reactive to the size of the window! When you resize the window, the app will resize the elements automatically for a better display of your app on different screen sizes.
@@ -174,22 +103,285 @@ As an exemple, we'll add a footer saved in a separate HTML file. Download the fo
 Let's link it in the App and specify that it is our footer.
 
 ```R
-ui <- fluidPage(
-  h1("Best Ramens in the world", align = "center"),
-  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
-  select your favorite ramen style and the country of fabrication. The table below display the top ten 
-    ramens for this selection!"),
-  HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
-  HTML('<br/>'),
-  includeHTML("footer.html"),
-)
+ui <- fluidPage(fluid = TRUE, 
+                # ----------------------------------
+                h1("Best Ramens in the world", align = "center"),
+                p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!")
+                HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+                br()
+                # ----------------------------------
+
+                # ----------------------------------
+                includeHTML("footer.html"),
+) # end fluidpage panel
 ```
 
+### Using Shiny Layouts to organize your App
 
+More complex App layouts can also be usefull to quickly organize your page and the navigation. 
+As an exemple, a navigation bar and several tabs can be created using the NavBarPage layout instead of the fluidPage.
+
+A very popular layout is the sidebar layout. It allows to separate your page into a sidebar and a main panel. Let's use this layout for our app.
+
+```R
+ui <- fluidPage(fluid = TRUE, 
+                # ----------------------------------
+                h1("Best Ramens in the world", align = "center"),
+                p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
+                HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+                br(),
+                # ----------------------------------
+                sidebarLayout(fluid=TRUE,
+                              sidebarPanel(
+                                h3("side bar")
+                                
+                              ),
+                              mainPanel(
+                                h3("main panel")
+                              ), # end main panel
+                ),
+                # ----------------------------------
+                includeHTML("footer.html"),
+) # end fluidpage
+```
+
+### Importing Data into the App
+
+For most apps, you'll want to be able to use and display your own dataset. To do so, you can simply import your dataset before declaring the ui.
+For our Ramen App, you'll need to download the dataset here. Place it in the same folder as your app.
+
+To be able to manipulate our dataset, we'll import the complete tidyverse library.
+
+```R
+library(shiny)
+library(tidyverse)
+
+
+# load ramen Ratings dataset
+ramen_ratings <- readr::read_csv("ramen_dataset.csv")
+```
 
 ### Adding widgets for user inputs
 
+So far, we have added non-reactive elements to our app. Let's now focus on adding some user imputs. In Shiny Apps, user inputs are very often widgets. The complete gallery of widget is available in the (widget gallery)["https://shiny.rstudio.com/gallery/widget-gallery.html"]
+
+For our Ramen App, let's add a first drop down menu to select the ramen style (Cup, Bowl and Pack).
+
+```R
+selectInput("style", label="Select the ramen style:",
+            c("Pack" = "Pack",
+              "Bowl" = "Bowl",
+              "Cup" = "Cup"), 
+            selected = "Cup",
+            multiple= TRUE)
+```
+
+Each widget function requires several arguments. The first two arguments for each widget are
+
+  - a name: The name will not be shown on the sceen, but is necessary to access the widget’s value.
+
+  - a label: This label will appear with the widget in your app.
+
+The remaining arguments vary from widget to widget, depending on what the widget needs to do its job. You can find the exact arguments needed by a widget on the widget function’s help page, (e.g., ?selectInput).
+
+Let's place this first widget in the sidebar of our page:
+
+```R
+ui <- fluidPage(fluid = TRUE, 
+                # ----------------------------------
+                h1("Best Ramens in the world", align = "center"),
+                p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
+                HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+                br(),
+                # ----------------------------------
+                sidebarLayout(fluid=TRUE,
+                              sidebarPanel(
+                                selectInput("style", label="Select the ramen style:",
+                                            c("Pack" = "Pack",
+                                              "Bowl" = "Bowl",
+                                              "Cup" = "Cup"), 
+                                            selected = "Cup",
+                                            multiple= TRUE),
+                              ),
+                              mainPanel(
+                                h3("main panel")
+                              ), # end main panel
+                ),
+                # ----------------------------------
+                includeHTML("footer.html"),
+) # end fluidpage
+```
+When you run the app, you should now see your widget, allowing to select the style of the Ramen.
+
+We want a second dropdown menu to be added for the user to be able to select the country of fabrication. Because the list of country needs to be addapted to the dataset (and because we don't want to have to type all the countries names). We'll create that list directly from the dataset before the ui.
+
+```R
+# get list of countries in dataset
+country_list<- ramen_ratings %>% select(country) %>% unique()
+```
+
+Then we can use directly this list in the second drop down menu. Note that for this drop down menu, we don't want to enable the multiple selection.
+
+```R
+selectInput("country", label="Select the country of fabrication:",
+                    country_list, 
+                    selected = "Japan",
+                    multiple= FALSE)
+```
+
+Finally, we also want two radio buttons to choose the plot view.
+
+```R
+radioButtons("pType", label="Choose View:",
+             list("Barchart", "Boxplot"))
+```
+
+All in all, the complete code we have so far should look like this:
+
+```R
+library(shiny)
+library(tidyverse)
+
+# load ramen Ratings dataset
+ramen_ratings <- readr::read_csv("ramen_dataset.csv")
+
+# get list of countries in dataset
+country_list<- ramen_ratings %>% select(country) %>% unique()
+
+# UI
+ui <- fluidPage(fluid = TRUE, 
+  # ----------------------------------
+  h1("Best Ramens in the world", align = "center"),
+  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
+  HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+  HTML('<br/>'),
+  # ----------------------------------
+  sidebarLayout(fluid=TRUE,
+    sidebarPanel(
+        selectInput("style", label="Select the ramen style:",
+                      c("Pack" = "Pack",
+                        "Bowl" = "Bowl",
+                        "Cup" = "Cup"), 
+                      selected = "Cup",
+                      multiple= TRUE),
+                      
+        selectInput("country", label="Select the country of fabrication:",
+                    country_list, 
+                    selected = "Japan",
+                    multiple= FALSE),
+    
+        radioButtons("pType", label="Choose View:",
+                     list("Barchart", "Boxplot"))
+        
+        ),
+        mainPanel(
+          h3("main panel")
+        ), # end main panel
+  ),
+  # ----------------------------------
+  includeHTML("footer.html"),
+) # end NavPage panel
 
 
+server <- function(input, output) {}
 
+shinyApp(ui = ui, server = server)
+```
+
+Good job! you now have your UI set up!
+
+
+## The server function
+
+### Understanding the interplay between UI and server function
+
+Up until now we have been using an empty server function:
+
+```R
+server <- function(input, output) {
+}
+```
+In the server function happens all computing tasks that are required to modify the display in reaction to user input. 
+Let's first add a title in the main Panel of our app, that reacts to the selected country: 
+
+"Best ramens in XXX"
+
+So in the server function, we want to create a reactive variable that will store our title and that will be updated whenever the country input is modified. In the server function, we add a renderText() element, that combine "Best ramens in " and the name of the country chosen by the user. To access this country name, we can use the input variable, in which the different widget names can be directly accessed. 
+
+In our exemple, the country name can be accessed using the input$country variable.
+
+```R
+server <- function(input, output) {
+  # Title main area
+  # ----------------------------------
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
+}
+```
+
+Note that we redirect this renderText element to a output variable called toptitle. We now want to display this title in the main area of our page. To do so, we need to use Outputs functions from Shiny. There are a lot of different output functions, allowing you to output text, plots, images, tables... Here we need to render a Text element, so we'll use the textOutput().
+
+Let's add this output in the main area of of ui.
+
+```R
+# UI
+ui <- fluidPage(fluid = TRUE, 
+  # ----------------------------------
+  h1("Best Ramens in the world", align = "center"),
+  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
+  HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+  HTML('<br/>'),
+  # ----------------------------------
+  sidebarLayout(fluid=TRUE,
+    sidebarPanel(
+        selectInput("style", label="Select the ramen style:",
+                      c("Pack" = "Pack",
+                        "Bowl" = "Bowl",
+                        "Cup" = "Cup"), 
+                      selected = "Cup",
+                      multiple= TRUE),
+                      
+        selectInput("country", label="Select the country of fabrication:",
+                    country_list, 
+                    selected = "Japan",
+                    multiple= FALSE),
+    
+        radioButtons("pType", label="Choose View:",
+                     list("Barchart", "Boxplot"))
+        
+        ),
+        mainPanel(
+          textOutput("toptitle")
+        ), # end main panel
+  ),
+  # ----------------------------------
+  includeHTML("footer.html"),
+) # end NavPage panel
+
+
+server <- function(input, output) {}
+
+shinyApp(ui = ui, server = server)
+```
+
+It is possible to add an HTML formating on the text output elements:
+
+```R
+h3(textOutput("toptitle"), align = "left")
+```
+
+If you now run your app, you should see a reactive title, changing each time the country input variable is changed.
+
+### Adding a tables, plots and dealing with reactive elements.
 
