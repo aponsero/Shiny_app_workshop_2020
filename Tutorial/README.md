@@ -383,15 +383,18 @@ h3(textOutput("toptitle"), align = "left")
 
 If you now run your app, you should see a reactive title, changing each time the country input variable is changed.
 
-### Adding a tables, plots and dealing with reactive elements.
+### Adding a tables and plots
+
+Similarly, it is possible to create tables and plot output using renderTable() and renderPlot() function in the server. Let's create a table and two plots. Let's add in the server :
 
 ```R
 server <- function(input, output) {
   
-  # Title main area
   # ----------------------------------
-  output$toptitle <- renderText({
-    paste("Best ramens in ", input$country)
+  # Table output
+  output$top3 <- renderTable({
+    display_dataset <- ramen_ratings %>% filter(style %in% input$style & country == input$country)
+    display_dataset %>% arrange(desc(stars, review_number)) %>% slice(1:3) %>% select(-continent, -review_number)
   })
   
   # ----------------------------------
@@ -422,27 +425,53 @@ server <- function(input, output) {
 }
 ```
 
+If you're familiar with TidyR and ggplot2 these elements should be pretty straightforward to understand. Now let's add the table and plots in the ui function to display them.
+
 ```R
         mainPanel(
           h3(textOutput("toptitle"), align = "left"),
+          tableOutput("top3"),
           plotOutput("barplot"),
           plotOutput("boxplot"),
         ), # end main panel
 ```
 
+Run the app to see how these elements are displayed and react to user inputs.
+
+### Reactive elements
+
+If you look closely to the server function, you see that there is some code repetition. In particular, the filtering and selection of the dataset to use for the table and plots is reapeated in each of them. To avoid this, improve readability and avoid any issues, we'll use a reactive element to store this selection.
+
+Reactive elements are basically variables that will be updated whenever one of more input they use is changed. Here, let's define a reactive value called display_dataset that store the subset of data that we use for our plots and table.
+
+
 ```R
 server <- function(input, output) {
-  
-  # Title main area
-  # ----------------------------------
-  output$toptitle <- renderText({
-    paste("Best ramens in ", input$country)
-  })
   
   # ----------------------------------
   # Reactive elements
   display_dataset <- reactive({
     ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  })
+  
+}
+```
+
+This reactive element can then be used in the renderTable and renderPlot functions as a regular dataset. However, when calling a reactive element, you need to add parenthesis after the element name. In our case display_dataset().
+
+```R
+server <- function(input, output) {
+  
+  # ----------------------------------
+  # Reactive elements
+  display_dataset <- reactive({
+    ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  })
+  
+  # ----------------------------------
+  # Table output
+  output$top3 <- renderTable({
+    display_dataset() %>% arrange(desc(stars, review_number)) %>% slice(1:3) %>% select(-continent, -review_number)
   })
   
   # ----------------------------------
@@ -468,9 +497,83 @@ server <- function(input, output) {
   
 }
 ```
+When running the app, you should see that the ui apparence did not change and that the interactions are similar as the previous step.
 
+### Conditional panels
+
+Finally, we want to be able to hide the box_plot or the barplot when the user click on the radio buttons. To do so, we can use conditionalPanel() function. This function takes the condition that allows the display of the panel, and the output you want to include. In our case we want the plotOutput("barplot") to be only visible when the radio button 'Barchart' is clicked and the plotOutput("boxplot") visible when the 'Boxplot' button is clicked.
 
 ```R
+        mainPanel(
+          h3(textOutput("toptitle"), align = "left"),
+          tableOutput("top3"),
+          conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
+          conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
+        ), # end main panel
+```
+Run the app to see how these conditional panel react to user input.
+
+## Deploying your app on Shiny.io
+
+We now have a complete app! 
+
+```R
+library(shiny)
+library(tidyverse)
+
+# load ramen Ratings dataset
+ramen_ratings <- readr::read_csv("ramen_dataset.csv")
+
+# get list of countries in dataset
+country_list<- ramen_ratings %>% select(country) %>% unique()
+
+# UI
+ui <- fluidPage(fluid = TRUE, 
+  # ----------------------------------
+  h1("Best Ramens in the world", align = "center"),
+  p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
+                select your favorite ramen style and the country of fabrication. The table below display the best three 
+                ramens for this selection!"),
+  HTML('<center><img src="1200px-Shoyu_Ramen.jpg" width="100%"></center>'),
+  HTML('<br/>'),
+  # ----------------------------------
+  sidebarLayout(fluid=TRUE,
+    sidebarPanel(
+        selectInput("style", label="Select the ramen style:",
+                      c("Pack" = "Pack",
+                        "Bowl" = "Bowl",
+                        "Cup" = "Cup"), 
+                      selected = "Cup",
+                      multiple= TRUE),
+                      
+        selectInput("country", label="Select the country of fabrication:",
+                    country_list, 
+                    selected = "Japan",
+                    multiple= FALSE),
+    
+        radioButtons("pType", label="Choose View:",
+                     list("Barchart", "Boxplot"))
+        
+        ),
+        mainPanel(
+          h3(textOutput("toptitle"), align = "left"),
+          tableOutput("top3"),
+          conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
+          conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
+        ), # end main panel
+  ),
+  # ----------------------------------
+  includeHTML("footer.html"),
+) # end NavPage panel
+
+
+# ----------------------------------
+# ----------------------------------
+# ----------------------------------
+# SERVER SIDE
+# ----------------------------------
+# ----------------------------------
+
 server <- function(input, output) {
   
   # Title main area
@@ -513,28 +616,42 @@ server <- function(input, output) {
   })
   
 }
+
+shinyApp(server = server, ui = ui)
 ```
+
+We want to deploy this app on the shinyapps.io server. 
+Go to to the (shinyapps.io)[https://www.shinyapps.io/] website and login to your account. A free account allows you to deploy few apps and host them for free. 
+Once loged in, you can see your personal dashboard with your hosted apps. You can disabled any apps from this dashboard, view they use....
+
+### Install rsconnect
+
+The rsconnect package allows to deploy shinyapps.io server. You can install it by running the R command in your Rstudio
 
 ```R
-        mainPanel(
-          h3(textOutput("toptitle"), align = "left"),
-          tableOutput("top3"),
-          plotOutput("barplot"),
-          plotOutput("boxplot"),
-        ), # end main panel
+install.packages('rsconnect')
 ```
 
-
-### Conditional panels
+After the rsconnect package has been installed, load it into your R session:
 
 ```R
-        mainPanel(
-          h3(textOutput("toptitle"), align = "left"),
-          tableOutput("top3"),
-          conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
-          conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
-        ), # end main panel
+library(rsconnect)
 ```
 
+Once you set up your account in shinyapps.io, you can configure the rsconnect package to use your account. 
 
-## Deploying your app on Shiny.io
+Shinyapps.io generates a token and secret, that the rsconnect package can use to access your account. Retrieve your token from the shinyapps.io dashboard. Tokens are listed under Tokens in the menu at the top right of the shinyapps dashboard (under your avatar).
+
+Click the show button on the token page. A window will pop up that shows the full command to configure your account using the appropriate parameters for the rsconnect::setAccountInfo function. Copy this command to your clip board, and then paste it into the command line of RStudio and click enter.
+
+Once this is done, you can simply deploy your application using the deployApp command.
+
+```R
+library(rsconnect)
+deployApp()
+```
+
+You can also deploy your application by clicking the 'Publish button' while viewing the shiny app!
+Once the deployment finishes, your browser should open automatically to your newly deployed application.
+
+Congratulations! You’ve written, debugged and deployed an awesome Ramen Rating app! :-)
