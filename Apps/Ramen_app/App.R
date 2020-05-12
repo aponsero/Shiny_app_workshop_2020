@@ -8,7 +8,7 @@ ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 country_list<- ramen_ratings %>% select(country) %>% unique()
 
 # UI
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
   # ----------------------------------
   h1("Best Ramens in the world", align = "center"),
   p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -32,7 +32,7 @@ ui <- fluidPage(fluid = TRUE,
                     multiple= FALSE),
     
         radioButtons("pType", label="Choose View:",
-                     list("Barchart", "Boxplot"))
+                     list("Barchart", "Boxplot")),
         
         ),
         mainPanel(
@@ -58,9 +58,9 @@ server <- function(input, output) {
   
   # Title main area
   # ----------------------------------
-  output$toptitle <- renderText({
-    paste("Best ramens in ", input$country)
-  })
+    output$toptitle <- renderText({
+      paste("Best ramens in ", input$country)
+    })
   
   # ----------------------------------
   # Reactive elements

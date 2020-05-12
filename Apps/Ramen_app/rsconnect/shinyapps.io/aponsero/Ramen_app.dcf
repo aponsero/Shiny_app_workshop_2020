@@ -1,0 +1,12 @@
+name: Ramen_app
+title: Ramen_app
+username:
+account: aponsero
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 2281900
+bundleId: 3133506
+url: https://aponsero.shinyapps.io/Ramen_app/
+when: 1589229094.18687
+asMultiple: FALSE
+asStatic: FALSE

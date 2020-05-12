@@ -30,7 +30,7 @@ In the code above, you see that we are using the function "fluidPage()" to creat
 
 ### Adding HTML elements to the UI
 
-Now that we have a global layout, let's add HTML elements such as a title, a description and a picture. In your app, you can add directly HTML code using the function: 
+Now that we have a global layout, the fluidPage, let's add HTML elements such as a title, a description and a picture. In your app, you can add directly HTML code using the function: 
 
 ```R
 HTML()
@@ -56,7 +56,7 @@ Additionally, Shiny allows to easily add to the app the main elements you can fi
 Let's add to our app a title and some descriptive text in the first tab:
 
 ```R
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
                 # ----------------------------------
                 h1("Best Ramens in the world", align = "center"),
                 p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -75,7 +75,7 @@ Next, we want to add a picture. Download the picture from the github repo : LINK
 Here is the code to add a picture and center it to the page.
 
 ```R
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
                 # ----------------------------------
                 h1("Best Ramens in the world", align = "center"),
                 p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -103,7 +103,7 @@ As an exemple, we'll add a footer saved in a separate HTML file. Download the fo
 Let's link it in the App and specify that it is our footer.
 
 ```R
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage(
                 # ----------------------------------
                 h1("Best Ramens in the world", align = "center"),
                 p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -126,7 +126,7 @@ As an exemple, a navigation bar and several tabs can be created using the NavBar
 A very popular layout is the sidebar layout. It allows to separate your page into a sidebar and a main panel. Let's use this layout for our app.
 
 ```R
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage(
                 # ----------------------------------
                 h1("Best Ramens in the world", align = "center"),
                 p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -191,7 +191,7 @@ The remaining arguments vary from widget to widget, depending on what the widget
 Let's place this first widget in the sidebar of our page:
 
 ```R
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage(
                 # ----------------------------------
                 h1("Best Ramens in the world", align = "center"),
                 p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -255,7 +255,7 @@ ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 country_list<- ramen_ratings %>% select(country) %>% unique()
 
 # UI
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
   # ----------------------------------
   h1("Best Ramens in the world", align = "center"),
   p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -334,7 +334,7 @@ Let's add this output in the main area of of ui.
 
 ```R
 # UI
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
   # ----------------------------------
   h1("Best Ramens in the world", align = "center"),
   p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
@@ -513,6 +513,63 @@ Finally, we want to be able to hide the box_plot or the barplot when the user cl
 ```
 Run the app to see how these conditional panel react to user input.
 
+### BONUS: Events and action buttons
+
+Another type of widgets available through Shiny are action buttons. They are used in the server function through observeEvent and eventReactive functions.
+
+To create an action button in shiny you can use the actionButton() function. This takes two arguments: 
+    - inputId - the ID of the button or link
+    - label - the label to display in the button or link
+
+Let's add a "search" button to the ui.
+
+```R
+  sidebarLayout(fluid=TRUE,
+    sidebarPanel(
+        selectInput("style", label="Select the ramen style:",
+                      c("Pack" = "Pack",
+                        "Bowl" = "Bowl",
+                        "Cup" = "Cup"), 
+                      selected = "Cup",
+                      multiple= TRUE),
+                      
+        selectInput("country", label="Select the country of fabrication:",
+                    country_list, 
+                    selected = "Japan",
+                    multiple= FALSE),
+    
+        radioButtons("pType", label="Choose View:",
+                     list("Barchart", "Boxplot")),
+
+        actionButton("go", "Search")
+        
+        ),
+```
+
+Action buttons are a bit different from other shiny widgets because the value of an action button is not meaningful by itself. The click on the button is meant to be observed by one of observeEvent() or eventReactive(). These functions monitor the value, and when it changes they run a block of code.
+
+First, let's see eventReactive(). This function is quite similar to reactive(), as it creates a reactive expression. But this reactive expression monitors an event, and will only be updated when this event occurs. Here we want the app to update the display_dataset reactive expression only when the button is clicked. To do so, we'll modify the reactive() function into eventReactive().
+
+```R
+  display_dataset <- eventReactive(input$go,{
+    ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  })
+```
+If you run the app, you'll see that the plots and tables only reacts to the button being clicked. Note that no plots or table will be displayed before the user clicks the button for the first time. However, the title is still appearing and changing whenever the user changes the country name.
+
+To avoid this behaviour, we'll use an observeEvent() function. As eventReactive(), observeEvent() observes an event, which is set in the first argument of the function. Whenever the event occurs, observeEvent() will run its second argument, which should be a block of code surrounded in braces.
+Let's use it to render the title text only when the button is clicked.
+
+```R
+  observeEvent(input$do, {
+    output$toptitle <- renderText({
+      paste("Best ramens in ", input$country)
+    })
+  }) 
+```
+
+Now you have an app that uses a 'search' button! congrats!
+
 ## Deploying your app on Shiny.io
 
 We now have a complete app! 
@@ -528,7 +585,7 @@ ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 country_list<- ramen_ratings %>% select(country) %>% unique()
 
 # UI
-ui <- fluidPage(fluid = TRUE, 
+ui <- fluidPage( 
   # ----------------------------------
   h1("Best Ramens in the world", align = "center"),
   p("Explore the best ramens in the world, recommended by the users themselves! In this tab, you can 
