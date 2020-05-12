@@ -28,6 +28,8 @@ First, we'll take a look at the UI function. This function contains all that you
 
 In the code above, you see that we are using the function "fluidPage()" to create a blank web page. Inside this page we'll place all elements we want to display.
 
+FluidPage is one of the available page layout accessible through Shiny. Other layout can be used. In particular, I tend to use a lot the navPage() layout, which build a nevigation bar and tabs. The apparence of these layouts can be changed using the "theme" parameter.
+
 ### Adding HTML elements to the UI
 
 Now that we have a global layout, the fluidPage, let's add HTML elements such as a title, a description and a picture. In your app, you can add directly HTML code using the function: 
