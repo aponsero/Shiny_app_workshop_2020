@@ -73,7 +73,7 @@ Note that the elements in the fluidPage should be listed using commas. Rstudio w
 
 When you run the app you should now see on the page the title and text we added.
 
-Next, we want to add a picture. Download the picture from the github repo : LINK. Create a folder www in the same directory as your app. Place the picture in that folder, so the app knows where to look for the picture.
+Next, we want to add a picture. Download the picture from the github repo. Create a folder called 'www' in the same directory as your app. Place the picture in that folder, so the app knows where to look for the picture.
 Here is the code to add a picture and center it to the page.
 
 ```R
@@ -122,9 +122,7 @@ ui <- fluidPage(
 
 ### Using Shiny Layouts to organize your App
 
-More complex App layouts can also be usefull to quickly organize your page and the navigation. 
-As an exemple, a navigation bar and several tabs can be created using the NavBarPage layout instead of the fluidPage.
-
+Layouts are also available in shiny to organize content in your page.
 A very popular layout is the sidebar layout. It allows to separate your page into a sidebar and a main panel. Let's use this layout for our app.
 
 ```R
