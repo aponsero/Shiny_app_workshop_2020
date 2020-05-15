@@ -2,6 +2,12 @@
 
 This tutorial will show you step by step how to create the Ramen Rating Shiny App, and cover the architecture and the main basic functions available in Shiny. This is not an exhaustive view on what is possible through Shiny App, but rather a first step to create your own more complex apps.
 
+# SETUP
+You should already have clone this repository on your local computer, but if it is not yet the case, do it now!
+
+To start this tutorial, create a new empty script in RStudio and save it in a separate folder in your computer. Make sure to call that script "App.R".
+In the same folder copy the ramen picture, the ramen dataset and the footer.html file (these files are all available in this tutorial folder).
+
 ## Create the minimal functioning App
 
 Open R studio and create a new blank R script. Copy paste the minimal functioning app below:
