@@ -1,16 +1,16 @@
 # Ramen Rating Shiny App tutorial
 
-This tutorial will show you step by step how to create the Ramen Rating Shiny App, and cover the architecture and the main basic functions available in Shiny. This is not an exhaustive view on what is possible through Shiny App, but rather a first step to create your own more complex apps.
+This tutorial will show you step by step how to create the Ramen Rating Shiny App, cover the architecture and the main basic functions available in Shiny. This is not an exhaustive view on what is possible through Shiny App, but rather a first step to create your own more complex apps.
 
 # SETUP
-You should already have clone this repository on your local computer, but if it is not yet the case, do it now!
+You should already have cloned this repository on your local computer, but if it is not yet the case, do it now!
 
 To start this tutorial, create a new empty script in RStudio and save it in a separate folder in your computer. Make sure to call that script "App.R".
 In the same folder copy the ramen picture, the ramen dataset and the footer.html file (these files are all available in this tutorial folder).
 
 ## Create the minimal functioning App
 
-Open R studio and create a new blank R script. Copy paste the minimal functioning app below:
+In your App.R script, copy and paste the minimal functioning app below:
 
 
 ```R
@@ -24,9 +24,7 @@ shinyApp(ui = ui, server = server)
 
 ```
 
-Save the script in a dedicated folder, and make sure to call this script "App.R".
-
-You can then run this app. This will open a blank page!
+Save the script. You can then run this app. This will open a blank page! (but won't throw any error, so that's good!)
 
 ## Understand the UI function
 
@@ -38,13 +36,9 @@ FluidPage is one of the available page layout accessible through Shiny. Other la
 
 ### Adding HTML elements to the UI
 
-Now that we have a global layout, the fluidPage, let's add HTML elements such as a title, a description and a picture. In your app, you can add directly HTML code using the function: 
+Now that we have a global layout, the fluidPage, let's add HTML elements such as a title, a description and a picture. 
 
-```R
-HTML()
-```
-
-Additionally, Shiny allows to easily add to the app the main elements you can find in an HTML page:
+Shiny has tags that allows to easily add to the app the main elements you can find in an HTML page:
 
 | Shiny function        | desc           | HTML  |
 | ------------- |:-------------:| -----:|
@@ -96,7 +90,11 @@ ui <- fluidPage(
 ) # end fluidpage panel
 
 ```
+In this exemple, we are adding directly HTML code using the function (but we could have used the image() tag too): 
 
+```R
+HTML()
+```
 Run the app. Note that the app is reactive to the size of the window! When you resize the window, the app will resize the elements automatically for a better display of your app on different screen sizes.
 
 ### Adding a HTML code from another file
@@ -122,7 +120,7 @@ ui <- fluidPage(
                 # ----------------------------------
 
                 # ----------------------------------
-                includeHTML("footer.html"),
+                includeHTML("footer.html")
 ) # end fluidpage panel
 ```
 
@@ -151,7 +149,7 @@ ui <- fluidPage(
                               ), # end main panel
                 ),
                 # ----------------------------------
-                includeHTML("footer.html"),
+                includeHTML("footer.html")
 ) # end fluidpage
 ```
 
@@ -173,7 +171,7 @@ ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 
 ### Adding widgets for user inputs
 
-So far, we have added non-reactive elements to our app. Let's now focus on adding some user imputs. In Shiny Apps, user inputs are very often widgets. The complete gallery of widget is available in the (widget gallery)["https://shiny.rstudio.com/gallery/widget-gallery.html"]
+So far, we have added non-reactive elements to our app. Let's now focus on adding some user imputs. In Shiny Apps, widgets allows to create a varieaty of user inputs. The complete gallery of widget is available in the (widget gallery)["https://shiny.rstudio.com/gallery/widget-gallery.html"]
 
 For our Ramen App, let's add a first drop down menu to select the ramen style (Cup, Bowl and Pack).
 
@@ -220,7 +218,7 @@ ui <- fluidPage(
                               ), # end main panel
                 ),
                 # ----------------------------------
-                includeHTML("footer.html"),
+                includeHTML("footer.html")
 ) # end fluidpage
 ```
 When you run the app, you should now see your widget, allowing to select the style of the Ramen.
@@ -293,7 +291,7 @@ ui <- fluidPage(
         ), # end main panel
   ),
   # ----------------------------------
-  includeHTML("footer.html"),
+  includeHTML("footer.html")
 ) # end NavPage panel
 
 
@@ -376,7 +374,13 @@ ui <- fluidPage(
 ) # end NavPage panel
 
 
-server <- function(input, output) {}
+server <- function(input, output) {
+  # Title main area
+  # ----------------------------------
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
+}
 
 shinyApp(ui = ui, server = server)
 ```
@@ -452,15 +456,11 @@ Reactive elements are basically variables that will be updated whenever one of m
 
 
 ```R
-server <- function(input, output) {
-  
-  # ----------------------------------
-  # Reactive elements
-  display_dataset <- reactive({
-    ramen_ratings %>% filter(style %in% input$style & country == input$country)
-  })
-  
-}
+# ----------------------------------
+# Reactive elements
+display_dataset <- reactive({
+  ramen_ratings %>% filter(style %in% input$style & country == input$country)
+})
 ```
 
 This reactive element can then be used in the renderTable and renderPlot functions as a regular dataset. However, when calling a reactive element, you need to add parenthesis after the element name. In our case display_dataset().
@@ -710,7 +710,6 @@ Click the show button on the token page. A window will pop up that shows the ful
 Once this is done, you can simply deploy your application using the deployApp command.
 
 ```R
-library(rsconnect)
 deployApp()
 ```
 

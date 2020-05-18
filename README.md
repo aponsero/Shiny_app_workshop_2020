@@ -32,6 +32,12 @@ To install the package, open RStudio and run in the console:
 install.packages("tidyverse")
 ```
 
+To be able to connect to the shinyapps.io server, you'll also need to install the rsconnect package
+To install the package, open RStudio and run in the console: 
+```{r}
+install.packages("rsconnect")
+```
+
 ### ShinyApp.io account
 
 Although not mandatory, if you want to be able to deploy your App on the ShinyApp.io server, you'll need to create a free account on [ShinyApps.io](https://www.shinyapps.io/)
