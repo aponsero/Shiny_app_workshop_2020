@@ -18,29 +18,27 @@ ui <- fluidPage(
   HTML('<br/>'),
   # ----------------------------------
   sidebarLayout(fluid=TRUE,
-    sidebarPanel(
-        selectInput("style", label="Select the ramen style:",
-                      c("Pack" = "Pack",
-                        "Bowl" = "Bowl",
-                        "Cup" = "Cup"), 
-                      selected = "Cup",
-                      multiple= TRUE),
-                      
-        selectInput("country", label="Select the country of fabrication:",
-                    country_list, 
-                    selected = "Japan",
-                    multiple= FALSE),
-    
-        radioButtons("pType", label="Choose View:",
-                     list("Barchart", "Boxplot")),
-        
-        ),
-        mainPanel(
-          h3(textOutput("toptitle"), align = "left"),
-          tableOutput("top3"),
-          conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
-          conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
-        ), # end main panel
+                sidebarPanel(
+                  selectInput("style", label="Select the ramen style:",
+                              c("Pack","Bowl","Cup" ),
+                              selected = "Cup",
+                              multiple= TRUE),
+                  
+                  selectInput("country", label="Select the country of fabrication:",
+                              country_list, 
+                              selected = "Japan",
+                              multiple= FALSE),
+                  
+                  radioButtons("pType", label="Choose View:",
+                               list("Barchart", "Boxplot"))
+                  
+                ),
+                mainPanel(
+                  h3(textOutput("toptitle"), align = "left"),
+                  tableOutput("top3"),
+                  conditionalPanel('input.pType=="Barchart"', plotOutput("barplot")),
+                  conditionalPanel('input.pType=="Boxplot"',plotOutput("boxplot")),
+                ), # end main panel
   ),
   # ----------------------------------
   includeHTML("footer.html"),
@@ -58,9 +56,9 @@ server <- function(input, output) {
   
   # Title main area
   # ----------------------------------
-    output$toptitle <- renderText({
-      paste("Best ramens in ", input$country)
-    })
+  output$toptitle <- renderText({
+    paste("Best ramens in ", input$country)
+  })
   
   # ----------------------------------
   # Reactive elements

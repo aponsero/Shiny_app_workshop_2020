@@ -177,9 +177,7 @@ For our Ramen App, let's add a first drop down menu to select the ramen style (C
 
 ```R
 selectInput("style", label="Select the ramen style:",
-            c("Pack" = "Pack",
-              "Bowl" = "Bowl",
-              "Cup" = "Cup"), 
+            c("Pack","Bowl","Cup" ), 
             selected = "Cup",
             multiple= TRUE)
 ```
@@ -207,9 +205,7 @@ ui <- fluidPage(
                 sidebarLayout(fluid=TRUE,
                               sidebarPanel(
                                 selectInput("style", label="Select the ramen style:",
-                                            c("Pack" = "Pack",
-                                              "Bowl" = "Bowl",
-                                              "Cup" = "Cup"), 
+                                            c("Pack","Bowl","Cup" ), 
                                             selected = "Cup",
                                             multiple= TRUE),
                               ),
@@ -271,9 +267,7 @@ ui <- fluidPage(
   sidebarLayout(fluid=TRUE,
     sidebarPanel(
         selectInput("style", label="Select the ramen style:",
-                      c("Pack" = "Pack",
-                        "Bowl" = "Bowl",
-                        "Cup" = "Cup"), 
+                      c("Pack","Bowl","Cup" ),
                       selected = "Cup",
                       multiple= TRUE),
                       
@@ -350,9 +344,7 @@ ui <- fluidPage(
   sidebarLayout(fluid=TRUE,
     sidebarPanel(
         selectInput("style", label="Select the ramen style:",
-                      c("Pack" = "Pack",
-                        "Bowl" = "Bowl",
-                        "Cup" = "Cup"), 
+                      c("Pack","Bowl","Cup" ),
                       selected = "Cup",
                       multiple= TRUE),
                       
@@ -533,9 +525,7 @@ Let's add a "search" button to the ui.
   sidebarLayout(fluid=TRUE,
     sidebarPanel(
         selectInput("style", label="Select the ramen style:",
-                      c("Pack" = "Pack",
-                        "Bowl" = "Bowl",
-                        "Cup" = "Cup"), 
+                      c("Pack","Bowl","Cup" ),
                       selected = "Cup",
                       multiple= TRUE),
                       
@@ -603,9 +593,7 @@ ui <- fluidPage(
   sidebarLayout(fluid=TRUE,
     sidebarPanel(
         selectInput("style", label="Select the ramen style:",
-                      c("Pack" = "Pack",
-                        "Bowl" = "Bowl",
-                        "Cup" = "Cup"), 
+                      c("Pack","Bowl","Cup" ),
                       selected = "Cup",
                       multiple= TRUE),
                       
