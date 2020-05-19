@@ -30,6 +30,7 @@ These libraries can be installed together by installing the 'Tidyverse' package.
 To install the package, open RStudio and run in the console: 
 ```{r}
 install.packages("tidyverse")
+install.packages("shiny")
 ```
 
 To be able to connect to the shinyapps.io server, you'll also need to install the rsconnect package
