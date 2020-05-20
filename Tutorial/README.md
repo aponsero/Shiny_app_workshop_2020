@@ -593,6 +593,26 @@ To avoid this behaviour, we'll also isolate the input$country in an eventReactiv
   })
 ```
 
+Because it is quite weird to see an empty app upon loading, you can change the behavior of eventReactive upon loading. To do so, you need to add a ignoreNULL=FALSE parameter in the eventReactive function. This parameter controls whether the value should be calculated, when the input$go is 0 (which is the value of the action button upon loading the app).
+
+```R
+  # Title main area
+  # ----------------------------------
+  ntext <- eventReactive(input$go, {
+    input$country
+  }, ignoreNULL = FALSE)
+  
+  output$toptitle <- renderText({
+    paste("Best ramens in ", ntext())
+  })
+  
+  # ----------------------------------
+  # Reactive elements
+  display_dataset <- eventReactive(input$go,{
+    ramen_ratings %>% filter(style %in% input$style & country == input$country)
+  }, ignoreNULL = FALSE)
+```
+
 Now you have an app that uses a 'search' button! congrats!
 
 Note: Action buttons can also be used in the server with the observeEvent() function. You want to use observeEvent() whenever you need to perform an action in response to an event. (But note that "recalculate a value" does not here count as performing an action-- You want to use an EventReactive() for that!). In observeEvent(), the first argument is the event you want to respond to, and the second argument is a function that should be called whenever the event occurs.
