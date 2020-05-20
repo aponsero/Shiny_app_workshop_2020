@@ -553,18 +553,21 @@ First, let's see eventReactive(). This function is quite similar to reactive(), 
 ```
 If you run the app, you'll see that the plots and tables only reacts to the button being clicked. Note that no plots or table will be displayed before the user clicks the button for the first time. However, the title is still appearing and changing whenever the user changes the country name.
 
-To avoid this behaviour, we'll use an observeEvent() function. As eventReactive(), observeEvent() observes an event, which is set in the first argument of the function. Whenever the event occurs, observeEvent() will run its second argument, which should be a block of code surrounded in braces.
-Let's use it to render the title text only when the button is clicked.
+To avoid this behaviour, we'll also isolate the input$country in an eventReactive() block, and then use this eventReactive element in the renderText() function:
 
 ```R
-  observeEvent(input$do, {
-    output$toptitle <- renderText({
-      paste("Best ramens in ", input$country)
-    })
-  }) 
+  ntext <- eventReactive(input$go, {
+    input$country
+  })
+  
+  output$toptitle <- renderText({
+    paste("Best ramens in ", ntext())
+  })
 ```
 
 Now you have an app that uses a 'search' button! congrats!
+
+Note: Action buttons can also be used in the server with the observeEvent() function. You want to use observeEvent() whenever you need to perform an action in response to an event. (But note that "recalculate a value" does not here count as performing an action-- You want to use an EventReactive() for that!). In observeEvent(), the first argument is the event you want to respond to, and the second argument is a function that should be called whenever the event occurs.
 
 ## Deploying your app on Shiny.io
 
