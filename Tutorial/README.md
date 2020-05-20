@@ -126,7 +126,7 @@ ui <- fluidPage(
 
 ### Using Shiny Layouts to organize your App
 
-Layouts are also available in shiny to organize content in your page.
+Shiny includes a number of facilities for laying out the components of an application. These layouts are meant to help you to organize content in your page.
 A very popular layout is the sidebar layout. It allows to separate your page into a sidebar and a main panel. Let's use this layout for our app.
 
 ```R
@@ -153,6 +153,8 @@ ui <- fluidPage(
 ) # end fluidpage
 ```
 
+Other layouts can be explored (here)[https://shiny.rstudio.com/articles/layout-guide.html]
+
 ### Importing Data into the App
 
 For most apps, you'll want to be able to use and display your own dataset. To do so, you can simply import your dataset before declaring the ui.
@@ -171,7 +173,7 @@ ramen_ratings <- readr::read_csv("ramen_dataset.csv")
 
 ### Adding widgets for user inputs
 
-So far, we have added non-reactive elements to our app. Let's now focus on adding some user imputs. In Shiny Apps, widgets allows to create a varieaty of user inputs. The complete gallery of widget is available in the (widget gallery)["https://shiny.rstudio.com/gallery/widget-gallery.html"]
+So far, we have added non-reactive elements to our app. Let's now focus on adding some user imputs. In Shiny Apps, widgets allows to create a varieaty of user inputs. The complete gallery of widget is available in the [widget gallery]("https://shiny.rstudio.com/gallery/widget-gallery.html")
 
 For our Ramen App, let's add a first drop down menu to select the ramen style (Cup, Bowl and Pack).
 
@@ -312,7 +314,19 @@ Let's first add a title in the main Panel of our app, that reacts to the selecte
 
 "Best ramens in XXX"
 
-So in the server function, we want to create a reactive variable that will store our title and that will be updated whenever the country input is modified. In the server function, we add a renderText() element, that combine "Best ramens in " and the name of the country chosen by the user. To access this country name, we can use the input variable, in which the different widget names can be directly accessed. 
+So in the server function, we want to create an object that will store our title and that will be updated whenever the country input is modified. 
+
+You can create these objects by defining a new element for output within the server function, here we call it ``` output$toptitle```. Each output should contain one of Shiny’s render* functions. 
+
+| render function        | Creates    | 
+| ------------- |:-------------:| 
+| renderDataTable()      | DataTable |
+| renderImage()     | image      |
+| renderPlot() | plot      |
+| renderTable() | Table      |
+| renderText() | text      |
+
+In the server function, we add a renderText() element, that combine "Best ramens in " and the name of the country chosen by the user. To access this country name, we can use the input variable list, in which the different widget names can be directly accessed. 
 
 In our exemple, the country name can be accessed using the input$country variable.
 
@@ -326,7 +340,19 @@ server <- function(input, output) {
 }
 ```
 
-Note that we redirect this renderText element to a output variable called toptitle. We now want to display this title in the main area of our page. To do so, we need to use Outputs functions from Shiny. There are a lot of different output functions, allowing you to output text, plots, images, tables... Here we need to render a Text element, so we'll use the textOutput().
+We now want to display this title in the main area of our page. To do so, we need to use Outputs functions from Shiny. There are a lot of different output functions, allowing you to output text, plots, images, tables... 
+
+Shiny provides a family of functions that turn R objects into output for your user interface. Each function creates a specific type of output.
+
+| Shiny function        | Creates    | 
+| ------------- |:-------------:| 
+| dataTableOutput()      | DataTable |
+| imageOutput()     | image      |
+| plotOutput() | plot      |
+| tableOutput() | Table      |
+| textOutput() | text      |
+
+Here we need to render a Text element, so we'll use the textOutput(). You can add output to the user interface in the same way that you added HTML elements and widgets.
 
 Let's add this output in the main area of of ui.
 
@@ -444,7 +470,9 @@ Run the app to see how these elements are displayed and react to user inputs.
 
 If you look closely to the server function, you see that there is some code repetition. In particular, the filtering and selection of the dataset to use for the table and plots is reapeated in each of them. To avoid this, improve readability and avoid any issues, we'll use a reactive element to store this selection.
 
-Reactive elements are basically variables that will be updated whenever one of more input they use is changed. Here, let's define a reactive value called display_dataset that store the subset of data that we use for our plots and table.
+A reactive expression uses a widget input and returns a value. Reactive elements will be updated whenever one of more input they use is changed. 
+
+Here, let's define a reactive value called display_dataset that store the subset of data that we use for our plots and table.
 
 
 ```R
@@ -675,7 +703,7 @@ shinyApp(server = server, ui = ui)
 ```
 
 We want to deploy this app on the shinyapps.io server. 
-Go to to the (shinyapps.io)[https://www.shinyapps.io/] website and login to your account. A free account allows you to deploy few apps and host them for free. 
+Go to to the [shinyapps.io](https://www.shinyapps.io/) website and login to your account. A free account allows you to deploy few apps and host them for free. 
 Once loged in, you can see your personal dashboard with your hosted apps. You can disabled any apps from this dashboard, view they use....
 
 ### Install rsconnect
